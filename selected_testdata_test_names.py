@@ -4,6 +4,12 @@
 # $ grep "require external data" ./travis_test_lists/testlist_minimal_sorted.txt | grep -o "(iris[^ ]*" | grep -o "[^()]*" | sort | uniq
 #
 
+#
+# NOTE: ??why??
+#   Because in the minimal tests, iris-test-data is not installed
+#   This identifies all those, showing where extra time goes in full test run.
+#
+
 selected_testdata_test_names = [
     'iris.tests.experimental.regrid.test_regrid_area_weighted_rectilinear_src_and_grid.TestAreaWeightedRegrid',
     'iris.tests.experimental.test_fieldsfile.TestStructuredLoadFF',

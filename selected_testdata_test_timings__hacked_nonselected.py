@@ -1,3 +1,16 @@
+#
+# HACKED VERSION: temporary, show "other half" of selected tests.
+#
+
+
+#
+# NOTE: ??why??
+#   Because in the minimal tests, iris-test-data is not installed
+#   This identifies all those, showing where extra time goes in full test run.
+#
+# We also sum within testcase classes, to identify principal groups instead
+# of individual testcases.
+#
 from selected_testdata_test_names import selected_testdata_test_names
 
 import os
