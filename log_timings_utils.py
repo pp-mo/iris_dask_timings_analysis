@@ -117,13 +117,12 @@ def dirpath_combined_results(dirpath):
     return filenames_sorted, testnames_sorted, file_test_timings, report_lines
 
 
-def testdir_timings(dirpath,
-                    exclude_matches=['test_coding_standards', 'plot']):
-
+def testdir_all_test_times(dirpath,
+                           exclude_matches=['test_coding_standards', 'plot']):
     """
 
     Analyse test timing log outputs in the directory and return arrays of
-    aggregated timing data.
+    all the tests and timings.
 
     Args:
 
@@ -138,13 +137,13 @@ def testdir_timings(dirpath,
 
     Returns :
 
-       testnames, testtime_means, testtime_sds
+       filenames, testnames, tests_data
 
     where:
-       * 'testnames' is a (sorted) array of test identity strings.
+       * 'filenames' is a (sorted) list of logfile names.
+       * 'testnames' is a (sorted) list of test-names.
          NOTE: only those common to all logfiles.
-       * 'testtime_means' is an array of mean test times, in seconds.
-       * 'testtime_sds' is a corresponding array of standard deviations.
+       * 'tests_data' is an array[filename, testname] of all test timings.
 
     """
     filenames, testnames, file_test_timings, report_lines = \
@@ -169,9 +168,44 @@ def testdir_timings(dirpath,
         testnames = testnames[~exclude_mask]
         all_file_test_times = all_file_test_times[:, ~exclude_mask]
 
+    return filenames, testnames, all_file_test_times
+
+
+def testdir_timings(dirpath,
+                    exclude_matches=['test_coding_standards', 'plot']):
+
+    """
+
+    Analyse test timing log outputs in the directory and return arrays of
+    aggregated timing data.
+
+    Args:
+
+    * dirpath (string):
+       path of directory to seach for logfiles ('*.txt').
+
+    * exclude_matches (list of string):
+        sub-strings defining tests excluded from the results.
+        Tests whose names contain one of these are removed from the analysis.
+
+    Note: any tests not present in all input files are also excluded.
+
+    Returns :
+
+       testnames, testtime_means, testtime_sds
+
+    where:
+       * 'testnames' is a (sorted) list of test identity strings.
+         NOTE: only those common to all logfiles.
+       * 'testtime_means' is an array of mean test times, in seconds.
+       * 'testtime_sds' is a corresponding array of standard deviations.
+
+    """
+    filenames, testnames, all_file_test_times = testdir_all_test_times(
+        dirpath, exclude_matches)
+
     time_mean = np.mean(all_file_test_times, axis=0)
     time_std = np.std(all_file_test_times, axis=0, ddof=1)
-    time_var = time_std ** 2
 
     return testnames, time_mean, time_std
 
